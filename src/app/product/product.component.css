@@ -1,0 +1,38 @@
+.btn {
+    margin: 5px;
+}
+
+.templates {
+    border: 2px solid black;
+    margin: 5px;
+}
+
+.param {
+    padding: 10px;
+}
+
+.params {
+    border: 1px solid black;
+    border-radius: 5px;
+    margin:2px;
+}
+
+input[type='checkbox'] {
+    margin: 2px;
+}
+
+.switch{
+    margin-top:10px !important;
+}
+
+h5 {
+    padding-top:3px;
+}
+.nested {
+    padding-left:20px;
+    padding-right:20px;
+    padding-bottom: 5px;
+    border: 2px solid grey;
+    border-radius: 5px;
+    margin-bottom: 10px;
+}

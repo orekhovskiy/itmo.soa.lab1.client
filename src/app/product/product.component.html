@@ -1,0 +1,299 @@
+<div class="container">
+    <div class="templates">
+        <div *ngFor="let template of templates">
+            <button class="btn btn-secondary btn-{{template.getBootstrapType()}}"
+                    (click)="setTemplate(template)"
+                    > 
+                {{template.getMethod()}} {{template.getUrl()}}
+            </button>
+        </div>
+    </div>
+    <div calss="url">
+        <div class="input-group mb-3">
+            <button class="btn btn-{{template.getBootstrapType()}} dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                <div *ngIf="template.getMethod(); then selectedMethod else unselectedMethod"></div>
+                <ng-template #selectedMethod>{{template.getMethod()}}</ng-template>
+                <ng-template #unselectedMethod>Method</ng-template>
+            </button>
+            <ul class="dropdown-menu">
+              <li *ngFor="let method of methods"><button class="dropdown-item" (click)="template.setMethod(method)">{{method}}</button></li>
+            </ul>
+            <input type="text" class="form-control" value="{{generateUrl()}}">
+          </div>
+    </div>
+    <div class="request accordion" id="accordion">
+        <div class="accordion-item">
+            <h2 class="accordion-header" id="headingOne">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                    Path params
+                </button>
+            </h2>
+            <div id="collapseOne" class="accordion-collapse collapse" aria-labelledby="headingOne" data-bs-parent="#accordion">
+                <div class="accordion-body">
+                    <div>
+                        <div *ngFor="let pathParam of pathParams" class="row params">
+                            <div class="col param">
+                                {{pathParam.key}}
+                            </div>
+                            <div class="col param">
+                                {{pathParam.value}}
+                            </div>
+                            <div class="col">
+                                <button class="btn btn-danger" (click)="removeParam(pathParam.key, pathParam.value, 'path')">
+                                    remove
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="input-group">
+                        <input type="text" class="form-control" placeholder="key" id="path-param-key" >
+                        <input type="text" class="form-control" placeholder="value" id="path-param-value" >
+                        <button class="btn btn-outline-secondary" (click)="addParam('path')">Add</button>
+                    </div>
+                </div>
+            </div>
+            
+        </div>
+        <div class="accordion-item">
+
+            <h2 class="accordion-header" id="headingTwo">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                    Query params
+                </button>
+            </h2>
+            <div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo" data-bs-parent="#accordion">
+                <div class="accordion-body">
+                    <div>
+                        <div *ngFor="let prep of preparedQueryParams">
+                            <div class="input-group">
+                                <div class="input-group-text">
+                                    <label class="form-check-label">
+                                        Enable
+                                    </label>
+                                    <input class="form-check-input" type="checkbox" [checked]="prep.enabled" (change)="prep.enabled = !prep.enabled;">
+                                </div>
+                                <input type="text" class="form-control" value="{{prep.key}}" disabled>
+                                <input type="text" class="form-control" placeholder="value" id="prep-key-{{prep.key}}" (blur)="updateValue(prep.key)" >
+                                
+                            </div>
+                        </div>
+        
+                        <div *ngFor="let queryParam of queryParams" class="row params">
+                            <div class="col param">
+                                {{queryParam.key}}
+                            </div>
+                            <div class="col param">
+                                {{queryParam.value}}
+                            </div>
+                            <div class="col">
+                                <button class="btn btn-danger" (click)="removeParam(queryParam.key, queryParam.value, 'query')">
+                                    remove
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="input-group">
+                        <input type="text" class="form-control" value="sort" id="query-param-key" >
+                        <input type="text" class="form-control" placeholder="value" id="query-param-value" >
+                        <button class="btn btn-outline-secondary" (click)="addParam('query')">Add</button>
+                    </div>      
+                </div>
+            </div>
+        </div>
+        <div class="accordion-item">
+            <h2 class="accordion-header" id="headingThree">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+                    Body
+                </button>
+            </h2>
+            <div id="collapseThree" class="accordion-collapse collapse" aria-labelledby="headingThree" data-bs-parent="#accordion">
+                <div class="accordion-body">
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" [checked]="isXml" (change)="isXml = !isXml;">
+                        <label class="form-check-label" for="is-xml">
+                          XML view
+                        </label>
+                    </div>
+                    <div *ngIf="isXml; else notXml">
+                        <textarea class="form-control" id="xml-view"></textarea>
+                    </div>
+                    <ng-template #notXml>
+                        <div class="form-check form-switch">
+                            <input class="form-check-input switch" type="checkbox" 
+                                [checked]="bodyProduct.isEnabled" (change)="bodyProduct.isEnabled = !bodyProduct.isEnabled">
+                            <h1 class="form-check-label" for="flexSwitchCheckChecked">Product</h1>
+                        </div>
+                        <div class="input-group mb-3">
+                            <span class="input-group-text">Id</span>
+                            <input type="text" class="form-control" [formControl]="bodyProduct.id.value">
+                            <div class="input-group-text">
+                                <label class="form-check-label">
+                                    Enable
+                                </label>
+                                <input class="form-check-input" type="checkbox" (change)="bodyProduct.id.isEnabled = !bodyProduct.id.isEnabled">
+                            </div>
+                        </div>
+                        <div class="input-group mb-3">
+                            <span class="input-group-text">Name</span>
+                            <input type="text" class="form-control" [formControl]="bodyProduct.name.value">
+                            <div class="input-group-text">
+                                <label class="form-check-label">
+                                    Enable
+                                </label>
+                                <input class="form-check-input" type="checkbox" (change)="bodyProduct.name.isEnabled = !bodyProduct.name.isEnabled">
+                            </div>
+                        </div>
+                        <div class="nested">
+                            <div class="form-check form-switch">
+                                <input class="form-check-input switch" type="checkbox" (change)="bodyProduct.coordinates.isEnabled = !bodyProduct.coordinates.isEnabled">
+                                <h5 class="form-check-label" for="flexSwitchCheckChecked">Coordinates</h5>
+                            </div>
+                            <div class="input-group mb-3">
+                                <span class="input-group-text">X</span>
+                                <input type="text" class="form-control" [formControl]="bodyProduct.coordinates.x.value">
+                                <div class="input-group-text">
+                                    <label class="form-check-label">
+                                        Enable
+                                    </label>
+                                    <input class="form-check-input" type="checkbox" (change)="bodyProduct.coordinates.x.isEnabled = !bodyProduct.coordinates.x.isEnabled">
+                                </div>
+                            </div>
+                            <div class="input-group mb-3">
+                                <span class="input-group-text">Y</span>
+                                <input type="text" class="form-control" [formControl]="bodyProduct.coordinates.y.value">
+                                <div class="input-group-text">
+                                    <label class="form-check-label">
+                                        Enable
+                                    </label>
+                                    <input class="form-check-input" type="checkbox" (change)="bodyProduct.coordinates.y.isEnabled = !bodyProduct.coordinates.y.isEnabled">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="input-group mb-3">
+                            <span class="input-group-text">CreationDate</span>
+                            <input type="text" class="form-control" [formControl]="bodyProduct.creationDate.value">
+                            <div class="input-group-text">
+                                <label class="form-check-label">
+                                    Enable
+                                </label>
+                                <input class="form-check-input" type="checkbox" (change)="bodyProduct.creationDate.isEnabled = !bodyProduct.creationDate.isEnabled">
+                            </div>
+                        </div>
+                        <div class="input-group mb-3">
+                            <span class="input-group-text">Price</span>
+                            <input type="text" class="form-control" [formControl]="bodyProduct.price.value">
+                            <div class="input-group-text">
+                                <label class="form-check-label">
+                                    Enable
+                                </label>
+                                <input class="form-check-input" type="checkbox" (change)="bodyProduct.price.isEnabled = !bodyProduct.price.isEnabled">
+                            </div>
+                        </div>
+                        <div class="input-group mb-3">
+                            <span class="input-group-text">PartNumber</span>
+                            <input type="text" class="form-control" [formControl]="bodyProduct.partNumber.value">
+                            <div class="input-group-text">
+                                <label class="form-check-label">
+                                    Enable
+                                </label>
+                                <input class="form-check-input" type="checkbox" (change)="bodyProduct.partNumber.isEnabled = !bodyProduct.partNumber.isEnabled">
+                            </div>
+                        </div>
+                        <div class="input-group mb-3">
+                            <span class="input-group-text">ManufactureCost</span>
+                            <input type="text" class="form-control" [formControl]="bodyProduct.manufactureCost.value">
+                            <div class="input-group-text">
+                                <label class="form-check-label">
+                                    Enable
+                                </label>
+                                <input class="form-check-input" type="checkbox" (change)="bodyProduct.manufactureCost.isEnabled = !bodyProduct.manufactureCost.isEnabled">
+                            </div>
+                        </div>
+                        <div class="input-group mb-3">
+                            <span class="input-group-text">UnitOfMeasure</span>
+                            <input type="text" class="form-control" [formControl]="bodyProduct.unitOfMeasure.value">
+                            <div class="input-group-text">
+                                <label class="form-check-label">
+                                    Enable
+                                </label>
+                                <input class="form-check-input" type="checkbox" (change)="bodyProduct.unitOfMeasure.isEnabled = !bodyProduct.unitOfMeasure.isEnabled">
+                            </div>
+                        </div>
+                        <div class="nested">
+                            <div class="form-check form-switch">
+                                <input class="form-check-input switch" type="checkbox" (change)="bodyProduct.person.isEnabled = !bodyProduct.person.isEnabled">
+                                <h3 class="form-check-label" for="flexSwitchCheckChecked">Person</h3>
+                            </div>
+                            <div class="input-group mb-3">
+                                <span class="input-group-text">Name</span>
+                                <input type="text" class="form-control" [formControl]="bodyProduct.person.name.value">
+                                <div class="input-group-text">
+                                    <label class="form-check-label">
+                                        Enable
+                                    </label>
+                                    <input class="form-check-input" type="checkbox" (change)="bodyProduct.person.name.isEnabled = !bodyProduct.person.name.isEnabled">
+                                </div>
+                            </div>
+                            <div class="input-group mb-3">
+                                <span class="input-group-text">Weight</span>
+                                <input type="text" class="form-control" [formControl]="bodyProduct.person.weight.value">
+                                <div class="input-group-text">
+                                    <label class="form-check-label">
+                                        Enable
+                                    </label>
+                                    <input class="form-check-input" type="checkbox" (change)="bodyProduct.person.weight.isEnabled = !bodyProduct.person.weight.isEnabled">
+                                </div>
+                            </div>
+                            <div class="input-group mb-3">
+                                <span class="input-group-text">Country</span>
+                                <input type="text" class="form-control" [formControl]="bodyProduct.person.country.value">
+                                <div class="input-group-text">
+                                    <label class="form-check-label">
+                                        Enable
+                                    </label>
+                                    <input class="form-check-input" type="checkbox" (change)="bodyProduct.person.country.isEnabled = !bodyProduct.person.country.isEnabled">
+                                </div>
+                            </div>
+                            <div class="nested">
+                                <div class="form-check form-switch">
+                                    <input class="form-check-input switch" type="checkbox" (change)="bodyProduct.person.location.isEnabled = !bodyProduct.person.location.isEnabled">
+                                    <h5 class="form-check-label" for="flexSwitchCheckChecked">Location</h5>
+                                </div>
+                                <div class="input-group mb-3">
+                                    <span class="input-group-text">X</span>
+                                    <input type="text" class="form-control" [formControl]="bodyProduct.person.location.x.value">
+                                    <div class="input-group-text">
+                                        <label class="form-check-label">
+                                            Enable
+                                        </label>
+                                        <input class="form-check-input" type="checkbox" (change)="bodyProduct.person.location.x.isEnabled = !bodyProduct.person.location.x.isEnabled">
+                                    </div>
+                                </div>
+                                <div class="input-group mb-3">
+                                    <span class="input-group-text">Y</span>
+                                    <input type="text" class="form-control" [formControl]="bodyProduct.person.location.y.value">
+                                    <div class="input-group-text">
+                                        <label class="form-check-label">
+                                            Enable
+                                        </label>
+                                        <input class="form-check-input" type="checkbox" (change)="bodyProduct.person.location.y.isEnabled = !bodyProduct.person.location.y.isEnabled">
+                                    </div>
+                                </div>
+                                <div class="input-group mb-3">
+                                    <span class="input-group-text">Z</span>
+                                    <input type="text" class="form-control" [formControl]="bodyProduct.person.location.z.value">
+                                    <div class="input-group-text">
+                                        <label class="form-check-label">
+                                            Enable
+                                        </label>
+                                        <input class="form-check-input" type="checkbox" (change)="bodyProduct.person.location.z.isEnabled = !bodyProduct.person.location.z.isEnabled">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </ng-template>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
