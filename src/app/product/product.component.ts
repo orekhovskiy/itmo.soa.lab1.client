@@ -41,6 +41,7 @@ export class ProductComponent implements OnInit {
   bodyProduct: BodyProduct = new BodyProduct();
   alertVisibile: boolean = false;
   textArea: String;
+  isRequestShown: boolean = true;
 
   constructor(private readonly productService: ProductService) { }
 
@@ -137,6 +138,16 @@ export class ProductComponent implements OnInit {
     }
     else {
       this.alertVisibile = true;
+    }
+  }
+
+  setIsRequestShown(isRequestShown: boolean) {
+    this.isRequestShown = isRequestShown;
+    if (isRequestShown) {
+      document.getElementById('req-btn').blur();
+    }
+    else {
+      document.getElementById('res-btn').blur();
     }
   }
 }
