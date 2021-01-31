@@ -18,7 +18,8 @@
             <ul class="dropdown-menu">
               <li *ngFor="let method of methods"><button class="dropdown-item" (click)="template.setMethod(method)">{{method}}</button></li>
             </ul>
-            <input type="text" class="form-control" value="{{generateUrl()}}">
+            <input type="text" class="form-control" id="url" value="{{generateUrl()}}">
+            <button class="btn btn-dark" (click)="sendRequest()">Send request</button>
           </div>
     </div>
     <div class="request accordion" id="accordion">
@@ -115,7 +116,7 @@
                         </label>
                     </div>
                     <div *ngIf="isXml; else notXml">
-                        <textarea class="form-control" id="xml-view"></textarea>
+                        <textarea class="form-control" id="xml-view"  [value]="getXmlView()"></textarea>
                     </div>
                     <ng-template #notXml>
                         <div class="form-check form-switch">

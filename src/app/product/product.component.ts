@@ -39,12 +39,9 @@ export class ProductComponent implements OnInit {
     { key: 'page-capacity', value: '', enabled: false },
   ];
   bodyProduct: BodyProduct = new BodyProduct();
-
   constructor(private readonly productService: ProductService) { }
 
-  ngOnInit(): void { 
-    this.productService.castObjectToXML();
-  }
+  ngOnInit(): void { }
 
   setTemplate(template: Template) {
     this.template = new Template(template.getMethod(), template.getUrl());
@@ -66,7 +63,6 @@ export class ProductComponent implements OnInit {
       if (params[i].key === key && params[i].value === value)
         index = i;
     }
-    console.log(index);
     if (index > -1) {
       params.splice(index, 1);
     }
@@ -87,6 +83,14 @@ export class ProductComponent implements OnInit {
       (<HTMLInputElement>document.getElementById(`${paramType}-param-key`)).value = '';
       (<HTMLInputElement>document.getElementById(`${paramType}-param-value`)).value = '';
     }
+  }
+
+  getXmlView(): String {
+    return this.productService.castObjectToXML(this.bodyProduct);
+  }
+
+  getUrl(): String {
+    return (<HTMLInputElement>document.getElementById('url')).value;
   }
 
   generateUrl(): String {
@@ -118,6 +122,16 @@ export class ProductComponent implements OnInit {
       }
     }
   }
+
+  sendRequest() {
+    let url = this.getUrl();
+    if (url) {
+            
+    }
+    else {
+      alert('ahtung');
+    }
+  }
 }
 
 interface Param {
@@ -125,11 +139,11 @@ interface Param {
   value: String;
   enabled?: boolean;
 }
-class BodyElement {
+export class BodyElement {
   value: FormControl = new FormControl('');
   isEnabled: boolean = false;
 }
-class BodyProduct {
+export class BodyProduct {
   isEnabled: boolean = true;
   id: BodyElement = new BodyElement;
   name: BodyElement = new BodyElement;
@@ -141,19 +155,19 @@ class BodyProduct {
   unitOfMeasure: BodyElement = new BodyElement;
   person: BodyPerson = new BodyPerson;
 }
-class BodyCoordinates {
+export class BodyCoordinates {
   isEnabled: boolean = false;
   x: BodyElement = new BodyElement;
   y: BodyElement = new BodyElement;
 }
-class BodyPerson {
+export class BodyPerson {
   isEnabled: boolean = false;
   name: BodyElement = new BodyElement;
   weight: BodyElement = new BodyElement;
   country: BodyElement = new BodyElement;
   location: BodyLocation = new BodyLocation;
 }
-class BodyLocation {
+export class BodyLocation {
   isEnabled: boolean = false;
   x: BodyElement = new BodyElement;
   y: BodyElement = new BodyElement;
