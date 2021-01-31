@@ -55,7 +55,7 @@
                                 {{pathParam.value}}
                             </div>
                             <div class="col">
-                                <button class="btn btn-danger" (click)="removeParam(pathParam.key, pathParam.value, 'path')">
+                                <button class="btn btn-danger float-end" (click)="removeParam(pathParam.key, pathParam.value, 'path')">
                                     remove
                                 </button>
                             </div>
@@ -101,7 +101,7 @@
                                 {{queryParam.value}}
                             </div>
                             <div class="col">
-                                <button class="btn btn-danger" (click)="removeParam(queryParam.key, queryParam.value, 'query')">
+                                <button class="btn btn-danger float-end" (click)="removeParam(queryParam.key, queryParam.value, 'query')">
                                     remove
                                 </button>
                             </div>
@@ -261,7 +261,7 @@
                                 </div>
                             </div>
                             <div class="input-group mb-3">
-                                <span class="input-group-text">Country</span>
+                                <span class="input-group-text">Nationality</span>
                                 <input type="text" class="form-control" [formControl]="bodyProduct.person.country.value">
                                 <div class="input-group-text">
                                     <label class="form-check-label">
