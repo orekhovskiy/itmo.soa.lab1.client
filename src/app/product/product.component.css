@@ -1,12 +1,12 @@
+.container {
+    padding-top:20px;
+}
 .btn {
     margin: 5px;
 }
-
-.templates {
-    border: 2px solid black;
-    margin: 5px;
+.prep {
+    margin-bottom:10px;
 }
-
 .param {
     padding: 10px;
 }

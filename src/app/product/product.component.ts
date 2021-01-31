@@ -21,14 +21,14 @@ export class ProductComponent implements OnInit {
     new Template('GET', '/products/manufacture-cost/average'),
     // получение всех: GET /products
     new Template('GET', '/products'),
-    // добавление нового: POST /products
-    new Template('POST', '/products'),
     // удаление: DELETE /products/id/{id}
     new Template('DELETE', '/products/id/{id}'),
     // удаление всех где есть овнер: DELETE /products/owner (в боди объект)
     new Template('DELETE', '/products/owner'),
     // удалить любой где есть прайс: DELETE /products/price/{price}
     new Template('DELETE', '/products/price/{price}'),
+    // добавление нового: POST /products
+    new Template('POST', '/products'),
     // обновление: PUT /products
     new Template('PUT', '/products'),
   ];
@@ -39,6 +39,9 @@ export class ProductComponent implements OnInit {
     { key: 'page-capacity', value: '', enabled: false },
   ];
   bodyProduct: BodyProduct = new BodyProduct();
+  alertVisibile: boolean = false;
+  textArea: String;
+
   constructor(private readonly productService: ProductService) { }
 
   ngOnInit(): void { }
@@ -89,10 +92,6 @@ export class ProductComponent implements OnInit {
     return this.productService.castObjectToXML(this.bodyProduct);
   }
 
-  getUrl(): String {
-    return (<HTMLInputElement>document.getElementById('url')).value;
-  }
-
   generateUrl(): String {
     let pathParams = '';
     let queryParams = '';
@@ -124,12 +123,20 @@ export class ProductComponent implements OnInit {
   }
 
   sendRequest() {
-    let url = this.getUrl();
+    let url = (<HTMLInputElement>document.getElementById('url')).value;
     if (url) {
-            
+      this.alertVisibile = false;
+      let body: String = '';
+      if (this.isXml) {
+        body = (<HTMLInputElement>document.getElementById('xml-view')).value;
+      }
+      else {
+        body = this.getXmlView();
+      }
+      console.log(body);
     }
     else {
-      alert('ahtung');
+      this.alertVisibile = true;
     }
   }
 }

@@ -1,13 +1,4 @@
 <div class="container">
-    <div class="templates">
-        <div *ngFor="let template of templates">
-            <button class="btn btn-secondary btn-{{template.getBootstrapType()}}"
-                    (click)="setTemplate(template)"
-                    > 
-                {{template.getMethod()}} {{template.getUrl()}}
-            </button>
-        </div>
-    </div>
     <div calss="url">
         <div class="input-group mb-3">
             <button class="btn btn-{{template.getBootstrapType()}} dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -22,7 +13,31 @@
             <button class="btn btn-dark" (click)="sendRequest()">Send request</button>
           </div>
     </div>
+    <div *ngIf="alertVisibile" class="alert alert-warning" role="alert">
+        Notthing to send
+        <button type="button" class="btn-close float-end" (click)="alertVisibile = false"></button>
+    </div>
     <div class="request accordion" id="accordion">
+        <div class="accordion-item">
+            <h2 class="accordion-header" id="headingZero">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseZero" aria-expanded="true" aria-controls="collapseZero">
+                    Url templates
+                </button>
+            </h2>
+            <div id="collapseZero" class="accordion-collapse collapse" aria-labelledby="headingZero" data-bs-parent="#accordion">
+                <div class="accordion-body">
+                    <div class="templates row">
+                        <div *ngFor="let template of templates" class="col-md-6 col-sm-12">
+                            <button class="btn btn-secondary btn-{{template.getBootstrapType()}}"
+                                    (click)="setTemplate(template)"
+                                    > 
+                                {{template.getMethod()}} {{template.getUrl()}}
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
         <div class="accordion-item">
             <h2 class="accordion-header" id="headingOne">
                 <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
@@ -65,17 +80,16 @@
             <div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo" data-bs-parent="#accordion">
                 <div class="accordion-body">
                     <div>
-                        <div *ngFor="let prep of preparedQueryParams">
+                        <div *ngFor="let prep of preparedQueryParams" class="prep">
                             <div class="input-group">
+                                <input type="text" class="form-control" value="{{prep.key}}" disabled>
+                                <input type="text" class="form-control" placeholder="value" id="prep-key-{{prep.key}}" (blur)="updateValue(prep.key)" >
                                 <div class="input-group-text">
                                     <label class="form-check-label">
                                         Enable
                                     </label>
                                     <input class="form-check-input" type="checkbox" [checked]="prep.enabled" (change)="prep.enabled = !prep.enabled;">
                                 </div>
-                                <input type="text" class="form-control" value="{{prep.key}}" disabled>
-                                <input type="text" class="form-control" placeholder="value" id="prep-key-{{prep.key}}" (blur)="updateValue(prep.key)" >
-                                
                             </div>
                         </div>
         
@@ -115,6 +129,7 @@
                           XML view
                         </label>
                     </div>
+                    <br/>
                     <div *ngIf="isXml; else notXml">
                         <textarea class="form-control" id="xml-view"  [value]="getXmlView()"></textarea>
                     </div>
