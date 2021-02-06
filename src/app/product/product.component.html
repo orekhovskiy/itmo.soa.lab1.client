@@ -1,4 +1,3 @@
-
 <div class="container">
     <div class="btn-group" role="group" aria-label="Basic outlined example">
         <button type="button" class="btn btn-{{isRequestShown ? 'primary' : 'outline-primary'}}" (click)="setIsRequestShown(true)" id="req-btn">Request</button>
@@ -7,7 +6,7 @@
     <br/>
     <br/>
     
-    <div *ngIf="isRequestShown; else response">
+    <div *ngIf="isRequestShown; else responseTemplate">
         <div calss="url">
             <div class="input-group mb-3">
                 <button class="btn btn-{{template.getBootstrapType()}} dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -19,12 +18,20 @@
                   <li *ngFor="let method of methods"><button class="dropdown-item" (click)="template.setMethod(method)">{{method}}</button></li>
                 </ul>
                 <input type="text" class="form-control" id="url" value="{{generateUrl()}}">
-                <button class="btn btn-dark" (click)="sendRequest()">Send request</button>
+                <div *ngIf="!isLoading; else loading">
+                    <button class="btn btn-dark" (click)="sendRequest()">Send request</button>
+                </div>
+                <ng-template #loading>
+                    <button class="btn btn-dark" type="button" disabled>
+                        <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                        Loading...
+                    </button>
+                </ng-template>
               </div>
         </div>
-        <div *ngIf="alertVisibile" class="alert alert-warning" role="alert">
-            Notthing to send
-            <button type="button" class="btn-close float-end" (click)="alertVisibile = false"></button>
+        <div *ngIf="alert.isVisible" class="alert alert-{{alert.bootstrapType}}" role="alert">
+            {{alert.text}}
+            <button type="button" class="btn-close float-end" (click)="alert.isVisible = false"></button>
         </div>
         <div class="request accordion" id="accordion">
             <div class="accordion-item">
@@ -38,8 +45,7 @@
                         <div class="templates row">
                             <div *ngFor="let template of templates" class="col-md-6 col-sm-12">
                                 <button class="btn btn-secondary btn-{{template.getBootstrapType()}}"
-                                        (click)="setTemplate(template)"
-                                        > 
+                                        (click)="setTemplate(template)"> 
                                     {{template.getMethod()}} {{template.getUrl()}}
                                 </button>
                             </div>
@@ -155,7 +161,8 @@
                                     <label class="form-check-label">
                                         Enable
                                     </label>
-                                    <input class="form-check-input" type="checkbox" (change)="bodyProduct.id.isEnabled = !bodyProduct.id.isEnabled">
+                                    <input class="form-check-input" type="checkbox" 
+                                        [checked]="bodyProduct.id.isEnabled" (change)="bodyProduct.id.isEnabled = !bodyProduct.id.isEnabled">
                                 </div>
                             </div>
                             <div class="input-group mb-3">
@@ -165,12 +172,14 @@
                                     <label class="form-check-label">
                                         Enable
                                     </label>
-                                    <input class="form-check-input" type="checkbox" (change)="bodyProduct.name.isEnabled = !bodyProduct.name.isEnabled">
+                                    <input class="form-check-input" type="checkbox"  
+                                        [checked]="bodyProduct.name.isEnabled" (change)="bodyProduct.name.isEnabled = !bodyProduct.name.isEnabled">
                                 </div>
                             </div>
                             <div class="nested">
                                 <div class="form-check form-switch">
-                                    <input class="form-check-input switch" type="checkbox" (change)="bodyProduct.coordinates.isEnabled = !bodyProduct.coordinates.isEnabled">
+                                    <input class="form-check-input switch" type="checkbox"  
+                                        [checked]="bodyProduct.coordinates.isEnabled" (change)="bodyProduct.coordinates.isEnabled = !bodyProduct.coordinates.isEnabled">
                                     <h5 class="form-check-label" for="flexSwitchCheckChecked">Coordinates</h5>
                                 </div>
                                 <div class="input-group mb-3">
@@ -180,7 +189,8 @@
                                         <label class="form-check-label">
                                             Enable
                                         </label>
-                                        <input class="form-check-input" type="checkbox" (change)="bodyProduct.coordinates.x.isEnabled = !bodyProduct.coordinates.x.isEnabled">
+                                        <input class="form-check-input" type="checkbox"  
+                                            [checked]="bodyProduct.coordinates.x.isEnabled" (change)="bodyProduct.coordinates.x.isEnabled = !bodyProduct.coordinates.x.isEnabled">
                                     </div>
                                 </div>
                                 <div class="input-group mb-3">
@@ -190,7 +200,8 @@
                                         <label class="form-check-label">
                                             Enable
                                         </label>
-                                        <input class="form-check-input" type="checkbox" (change)="bodyProduct.coordinates.y.isEnabled = !bodyProduct.coordinates.y.isEnabled">
+                                        <input class="form-check-input" type="checkbox"  
+                                            [checked]="bodyProduct.coordinates.y.isEnabled" (change)="bodyProduct.coordinates.y.isEnabled = !bodyProduct.coordinates.y.isEnabled">
                                     </div>
                                 </div>
                             </div>
@@ -201,7 +212,8 @@
                                     <label class="form-check-label">
                                         Enable
                                     </label>
-                                    <input class="form-check-input" type="checkbox" (change)="bodyProduct.creationDate.isEnabled = !bodyProduct.creationDate.isEnabled">
+                                    <input class="form-check-input" type="checkbox"  
+                                        [checked]="bodyProduct.creationDate.isEnabled" (change)="bodyProduct.creationDate.isEnabled = !bodyProduct.creationDate.isEnabled">
                                 </div>
                             </div>
                             <div class="input-group mb-3">
@@ -211,7 +223,8 @@
                                     <label class="form-check-label">
                                         Enable
                                     </label>
-                                    <input class="form-check-input" type="checkbox" (change)="bodyProduct.price.isEnabled = !bodyProduct.price.isEnabled">
+                                    <input class="form-check-input" type="checkbox"  
+                                        [checked]="bodyProduct.price.isEnabled" (change)="bodyProduct.price.isEnabled = !bodyProduct.price.isEnabled">
                                 </div>
                             </div>
                             <div class="input-group mb-3">
@@ -221,7 +234,8 @@
                                     <label class="form-check-label">
                                         Enable
                                     </label>
-                                    <input class="form-check-input" type="checkbox" (change)="bodyProduct.partNumber.isEnabled = !bodyProduct.partNumber.isEnabled">
+                                    <input class="form-check-input" type="checkbox"  
+                                        [checked]="bodyProduct.partNumber.isEnabled" (change)="bodyProduct.partNumber.isEnabled = !bodyProduct.partNumber.isEnabled">
                                 </div>
                             </div>
                             <div class="input-group mb-3">
@@ -231,7 +245,8 @@
                                     <label class="form-check-label">
                                         Enable
                                     </label>
-                                    <input class="form-check-input" type="checkbox" (change)="bodyProduct.manufactureCost.isEnabled = !bodyProduct.manufactureCost.isEnabled">
+                                    <input class="form-check-input" type="checkbox"  
+                                        [checked]="bodyProduct.manufactureCost.isEnabled" (change)="bodyProduct.manufactureCost.isEnabled = !bodyProduct.manufactureCost.isEnabled">
                                 </div>
                             </div>
                             <div class="input-group mb-3">
@@ -241,13 +256,15 @@
                                     <label class="form-check-label">
                                         Enable
                                     </label>
-                                    <input class="form-check-input" type="checkbox" (change)="bodyProduct.unitOfMeasure.isEnabled = !bodyProduct.unitOfMeasure.isEnabled">
+                                    <input class="form-check-input" type="checkbox"  
+                                        [checked]="bodyProduct.unitOfMeasure.isEnabled" (change)="bodyProduct.unitOfMeasure.isEnabled = !bodyProduct.unitOfMeasure.isEnabled">
                                 </div>
                             </div>
                             <div class="nested">
                                 <div class="form-check form-switch">
-                                    <input class="form-check-input switch" type="checkbox" (change)="bodyProduct.person.isEnabled = !bodyProduct.person.isEnabled">
-                                    <h3 class="form-check-label" for="flexSwitchCheckChecked">Person</h3>
+                                    <input class="form-check-input switch" type="checkbox"  
+                                        [checked]="bodyProduct.person.isEnabled" (change)="bodyProduct.person.isEnabled = !bodyProduct.person.isEnabled">
+                                    <h3 class="form-check-label" for="flexSwitchCheckChecked">Owner</h3>
                                 </div>
                                 <div class="input-group mb-3">
                                     <span class="input-group-text">Name</span>
@@ -256,7 +273,8 @@
                                         <label class="form-check-label">
                                             Enable
                                         </label>
-                                        <input class="form-check-input" type="checkbox" (change)="bodyProduct.person.name.isEnabled = !bodyProduct.person.name.isEnabled">
+                                        <input class="form-check-input" type="checkbox"  
+                                            [checked]="bodyProduct.person.name.isEnabled" (change)="bodyProduct.person.name.isEnabled = !bodyProduct.person.name.isEnabled">
                                     </div>
                                 </div>
                                 <div class="input-group mb-3">
@@ -266,7 +284,8 @@
                                         <label class="form-check-label">
                                             Enable
                                         </label>
-                                        <input class="form-check-input" type="checkbox" (change)="bodyProduct.person.weight.isEnabled = !bodyProduct.person.weight.isEnabled">
+                                        <input class="form-check-input" type="checkbox" 
+                                            [checked]="bodyProduct.person.weight.isEnabled" (change)="bodyProduct.person.weight.isEnabled = !bodyProduct.person.weight.isEnabled">
                                     </div>
                                 </div>
                                 <div class="input-group mb-3">
@@ -276,12 +295,14 @@
                                         <label class="form-check-label">
                                             Enable
                                         </label>
-                                        <input class="form-check-input" type="checkbox" (change)="bodyProduct.person.country.isEnabled = !bodyProduct.person.country.isEnabled">
+                                        <input class="form-check-input" type="checkbox" 
+                                            [checked]="bodyProduct.person.country.isEnabled" (change)="bodyProduct.person.country.isEnabled = !bodyProduct.person.country.isEnabled">
                                     </div>
                                 </div>
                                 <div class="nested">
                                     <div class="form-check form-switch">
-                                        <input class="form-check-input switch" type="checkbox" (change)="bodyProduct.person.location.isEnabled = !bodyProduct.person.location.isEnabled">
+                                        <input class="form-check-input switch" type="checkbox" 
+                                            [checked]="bodyProduct.person.location.isEnabled" (change)="bodyProduct.person.location.isEnabled = !bodyProduct.person.location.isEnabled">
                                         <h5 class="form-check-label" for="flexSwitchCheckChecked">Location</h5>
                                     </div>
                                     <div class="input-group mb-3">
@@ -291,7 +312,8 @@
                                             <label class="form-check-label">
                                                 Enable
                                             </label>
-                                            <input class="form-check-input" type="checkbox" (change)="bodyProduct.person.location.x.isEnabled = !bodyProduct.person.location.x.isEnabled">
+                                            <input class="form-check-input" type="checkbox" 
+                                                [checked]="bodyProduct.person.location.x.isEnabled"(change)="bodyProduct.person.location.x.isEnabled = !bodyProduct.person.location.x.isEnabled">
                                         </div>
                                     </div>
                                     <div class="input-group mb-3">
@@ -301,7 +323,8 @@
                                             <label class="form-check-label">
                                                 Enable
                                             </label>
-                                            <input class="form-check-input" type="checkbox" (change)="bodyProduct.person.location.y.isEnabled = !bodyProduct.person.location.y.isEnabled">
+                                            <input class="form-check-input" type="checkbox" 
+                                                [checked]="bodyProduct.person.location.y.isEnabled"(change)="bodyProduct.person.location.y.isEnabled = !bodyProduct.person.location.y.isEnabled">
                                         </div>
                                     </div>
                                     <div class="input-group mb-3">
@@ -311,7 +334,8 @@
                                             <label class="form-check-label">
                                                 Enable
                                             </label>
-                                            <input class="form-check-input" type="checkbox" (change)="bodyProduct.person.location.z.isEnabled = !bodyProduct.person.location.z.isEnabled">
+                                            <input class="form-check-input" type="checkbox" 
+                                                [checked]="bodyProduct.person.location.z.isEnabled" (change)="bodyProduct.person.location.z.isEnabled = !bodyProduct.person.location.z.isEnabled">
                                         </div>
                                     </div>
                                 </div>
@@ -322,7 +346,88 @@
             </div>
         </div>
     </div>
-    <ng-template #response>
-        <h1>Response</h1>
+    <ng-template #responseTemplate>
+        <h1 *ngIf="response.getStatusCode() != -1">
+            <span class="badge bg-danger">
+                Status: {{response.getStatusCode()}}
+            </span>
+        </h1>
+        <h2 *ngIf="response.getMessage()">
+            {{response.getMessage()}} 
+        </h2>
+        <div *ngIf="response.getProducts().length > 0">
+            <div *ngFor="let product of response.getProducts()" class="nested"> 
+                <h3><span class="badge bg-primary">Product</span></h3>
+                <div *ngIf="product.id" class="row row-cols-lg-auto">
+                    <span class="badge bg-secondary">Id</span>
+                    <span class="badge bg-light text-dark">{{product.id}}</span>
+                </div>
+                <div *ngIf="product.name" class="row row-cols-lg-auto">
+                    <span class="badge bg-secondary">Name</span>
+                    <span class="badge bg-light text-dark">{{product.name}}</span>
+                </div>
+                <div *ngIf="product.coordinates" class="nested">
+                    <h5><span class="badge bg-primary">Coordinates</span></h5>
+                    <div *ngIf="product.coordinates.x" class="row row-cols-lg-auto">
+                        <span class="badge bg-secondary">X</span>
+                        <span class="badge bg-light text-dark">{{product.coordinates.x}}</span>
+                    </div>
+                    <div *ngIf="product.coordinates.y" class="row row-cols-lg-auto">
+                        <span class="badge bg-secondary">Y</span>
+                        <span class="badge bg-light text-dark">{{product.coordinates.y}}</span>
+                    </div>
+                </div>
+                <div *ngIf="product.creationDate" class="row row-cols-lg-auto">
+                    <span class="badge bg-secondary">Creation Date</span>
+                    <span class="badge bg-light text-dark">{{product.creationDate}}</span>
+                </div>
+                <div *ngIf="product.price" class="row row-cols-lg-auto">
+                    <span class="badge bg-secondary">Price</span>
+                    <span class="badge bg-light text-dark">{{product.price}}</span>
+                </div>
+                <div *ngIf="product.partNumber" class="row row-cols-lg-auto">
+                    <span class="badge bg-secondary">Part Number</span>
+                    <span class="badge bg-light text-dark">{{product.partNumber}}</span>
+                </div>
+                <div *ngIf="product.manufactureCost" class="row row-cols-lg-auto">
+                    <span class="badge bg-secondary">Manufacture Cost</span>
+                    <span class="badge bg-light text-dark">{{product.manufactureCost}}</span>
+                </div>
+                <div *ngIf="product.unitOfMeasure" class="row row-cols-lg-auto">
+                    <span class="badge bg-secondary">Unit Of Measure</span>
+                    <span class="badge bg-light text-dark">{{product.unitOfMeasure}}</span>
+                </div>
+                <div *ngIf="product.person" class="nested">
+                    <h5><span class="badge bg-primary">Owner</span></h5>
+                    <div *ngIf="product.person.name" class="row row-cols-lg-auto">
+                        <span class="badge bg-secondary">Name</span>
+                        <span class="badge bg-light text-dark">{{product.person.name}}</span>
+                    </div>
+                    <div *ngIf="product.person.weight" class="row row-cols-lg-auto">
+                        <span class="badge bg-secondary">Weight</span>
+                        <span class="badge bg-light text-dark">{{product.person.weight}}</span>
+                    </div>
+                    <div *ngIf="product.person.country" class="row row-cols-lg-auto">
+                        <span class="badge bg-secondary">Nationality</span>
+                        <span class="badge bg-light text-dark">{{product.person.country}}</span>
+                    </div>
+                    <div *ngIf="product.person.location" class="nested">
+                        <h5><span class="badge bg-primary">Location</span></h5>
+                        <div *ngIf="product.person.location.x" class="row row-cols-lg-auto">
+                            <span class="badge bg-secondary">X</span>
+                            <span class="badge bg-light text-dark">{{product.person.location.x}}</span>
+                        </div>
+                        <div *ngIf="product.person.location.y" class="row row-cols-lg-auto">
+                            <span class="badge bg-secondary">Y</span>
+                            <span class="badge bg-light text-dark">{{product.person.location.y}}</span>
+                        </div>
+                        <div *ngIf="product.person.location.z" class="row row-cols-lg-auto">
+                            <span class="badge bg-secondary">Z</span>
+                            <span class="badge bg-light text-dark">{{product.person.location.z}}</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </ng-template>
 </div>

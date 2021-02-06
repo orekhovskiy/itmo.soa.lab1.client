@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormControl } from '@angular/forms';
-import { Template } from 'src/utils/Template';
+import { BodyProduct, Param, Template, Response, Alert } from 'src/utils/Types';
 import { ProductService } from './product.service';
 
 @Component({
@@ -39,9 +38,11 @@ export class ProductComponent implements OnInit {
     { key: 'page-capacity', value: '', enabled: false },
   ];
   bodyProduct: BodyProduct = new BodyProduct();
-  alertVisibile: boolean = false;
   textArea: String;
   isRequestShown: boolean = true;
+  response: Response = new Response();
+  alert: Alert = new Alert;
+  isLoading: boolean = false;
 
   constructor(private readonly productService: ProductService) { }
 
@@ -125,8 +126,22 @@ export class ProductComponent implements OnInit {
 
   sendRequest() {
     let url = (<HTMLInputElement>document.getElementById('url')).value;
-    if (url) {
-      this.alertVisibile = false;
+    let method = this.template.getMethod();
+    if (!url) {
+      this.alert.isVisible = true;
+      this.alert.text = 'Please specify the url.';
+      this.alert.bootstrapType = 'warning';
+    }
+    else if (!method) {
+      this.alert.isVisible = true;
+      this.alert.text = 'Please specify the method.';
+      this.alert.bootstrapType = 'warning';
+    }
+    else {
+      this.isLoading = true;
+      this.alert.isVisible = false;
+      this.alert.text = '';
+      this.alert.bootstrapType = '';
       let body: String = '';
       if (this.isXml) {
         body = (<HTMLInputElement>document.getElementById('xml-view')).value;
@@ -134,10 +149,38 @@ export class ProductComponent implements OnInit {
       else {
         body = this.getXmlView();
       }
-      console.log(body);
-    }
-    else {
-      this.alertVisibile = true;
+      this.productService.sendRequest(url, body, method).subscribe(
+        (data) => {
+          this.isLoading = false;
+          var products = this.productService.castXmlToObjectsArray(data);
+          this.response.setProducts(products);
+          console.log(products);
+          if (products.length > 0) {
+            this.response.setMessage('');
+          }
+          else {
+            if (data) {
+              this.response.setMessage(data);
+            }
+            else {
+              this.response.setMessage('OK');
+            }
+          }
+          this.response.setStatusCode(-1);
+          this.alert.isVisible = true;
+          this.alert.text = 'Positive response. For more details see \'Response\' tab.';
+          this.alert.bootstrapType = 'success';
+        },
+        (error) => {
+          this.isLoading = false;
+          this.response.setMessage(error.error);
+          this.response.setProducts([]);
+          this.response.setStatusCode(error.status);
+          this.alert.isVisible = true;
+          this.alert.text = 'Negative response. For more details see \'Response\' tab.';
+          this.alert.bootstrapType = 'danger';
+        }
+      );
     }
   }
 
@@ -150,44 +193,4 @@ export class ProductComponent implements OnInit {
       document.getElementById('res-btn').blur();
     }
   }
-}
-
-interface Param {
-  key: String;
-  value: String;
-  enabled?: boolean;
-}
-export class BodyElement {
-  value: FormControl = new FormControl('');
-  isEnabled: boolean = false;
-}
-export class BodyProduct {
-  isEnabled: boolean = true;
-  id: BodyElement = new BodyElement;
-  name: BodyElement = new BodyElement;
-  coordinates: BodyCoordinates = new BodyCoordinates;
-  creationDate: BodyElement = new BodyElement;
-  price: BodyElement = new BodyElement;
-  partNumber: BodyElement = new BodyElement;
-  manufactureCost: BodyElement = new BodyElement;
-  unitOfMeasure: BodyElement = new BodyElement;
-  person: BodyPerson = new BodyPerson;
-}
-export class BodyCoordinates {
-  isEnabled: boolean = false;
-  x: BodyElement = new BodyElement;
-  y: BodyElement = new BodyElement;
-}
-export class BodyPerson {
-  isEnabled: boolean = false;
-  name: BodyElement = new BodyElement;
-  weight: BodyElement = new BodyElement;
-  country: BodyElement = new BodyElement;
-  location: BodyLocation = new BodyLocation;
-}
-export class BodyLocation {
-  isEnabled: boolean = false;
-  x: BodyElement = new BodyElement;
-  y: BodyElement = new BodyElement;
-  z: BodyElement = new BodyElement;
 }

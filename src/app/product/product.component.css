@@ -40,3 +40,7 @@ h5 {
 textarea {
     height: 150px;
 }
+
+.badge {
+    margin: 5px;
+}
