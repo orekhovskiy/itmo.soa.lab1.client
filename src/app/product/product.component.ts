@@ -15,13 +15,13 @@ export class ProductComponent implements OnInit {
   methods: String[] = ['GET', 'POST', 'DELETE', 'PUT'];
   templates: Template[] = [
     // получение по ид: GET /products/id/{id}
-    new Template('GET', '/products/id/{id}'),
+    new Template('GET', '/products/{id}'),
     // расчет средней цены производителя : GET /products/manufacture-cost/average
     new Template('GET', '/products/manufacture-cost/average'),
     // получение всех: GET /products
     new Template('GET', '/products'),
     // удаление: DELETE /products/id/{id}
-    new Template('DELETE', '/products/id/{id}'),
+    new Template('DELETE', '/products/{id}'),
     // удаление всех где есть овнер: DELETE /products/owner (в боди объект)
     new Template('DELETE', '/products/owner'),
     // удалить любой где есть прайс: DELETE /products/price/{price}
@@ -29,7 +29,7 @@ export class ProductComponent implements OnInit {
     // добавление нового: POST /products
     new Template('POST', '/products'),
     // обновление: PUT /products
-    new Template('PUT', '/products'),
+    new Template('PUT', '/products/{id}'),
   ];
   pathParams: Param[] = [];
   queryParams: Param[] = [];
@@ -154,7 +154,6 @@ export class ProductComponent implements OnInit {
           this.isLoading = false;
           var products = this.productService.castXmlToObjectsArray(data);
           this.response.setProducts(products);
-          console.log(products);
           if (products.length > 0) {
             this.response.setMessage('');
           }
