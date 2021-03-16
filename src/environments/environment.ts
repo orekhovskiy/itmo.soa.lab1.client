@@ -4,7 +4,7 @@
 
 export const environment = {
   production: false,
-  service1BaseUrl: 'http://localhost:6780',
+  service1BaseUrl: 'http://localhost:8080',
   service2BaseUrl: 'http://localhost:6770/ebay/filter',
 };
 

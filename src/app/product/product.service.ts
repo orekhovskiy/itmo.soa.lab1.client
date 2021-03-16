@@ -26,7 +26,7 @@ export class ProductService {
                   };
                 return this.http.delete(this.baseUrl + url, opts);
             case 'PUT':
-                return this.http.put(this.baseUrl + url, body, {responseType: 'text'});
+                return this.http.put(this.baseUrl + url, body, {headers, responseType: 'text'});
         }
     }
 
@@ -62,10 +62,7 @@ export class ProductService {
                 xmlString += `<owner>${microElement}${nanoElement}</owner>`;
             }
             xmlString = `<product>${xmlString}</product>`;
-        }
-        //var parser = new DOMParser();
-        //var xmlDoc = parser.parseFromString(xmlString, "text/xml");
-        
+        }        
         return beautify(xmlString);
     }
 

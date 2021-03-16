@@ -8,7 +8,7 @@
         </ul>
         <input type="text" [formControl]="value" class="form-control" id="value">
         <div *ngIf="!isLoading; else loading">
-            <button class="btn btn-dark" (click)="sendRequest()">Send request</button>
+            <button class="btn btn-dark" (click)="sendRequest()" [disabled]="!value.value">Send request</button>
         </div>
         <ng-template #loading>
             <button class="btn btn-dark" type="button" disabled>

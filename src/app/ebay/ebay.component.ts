@@ -35,12 +35,12 @@ export class EbayComponent implements OnInit {
         this.isLoading = false;
         var products = this.ebayService.castXmlToObjectsArray(data);
         this.response.setProducts(products);
-        this.response.setMessage(products.length > 0 ? '' : data);
+        this.response.setMessage(products.length > 0 ? '' : data === '<?xml version="1.0" encoding="UTF-8" standalone="yes"?><products/>'? 'Empty set' : data);
         this.response.setStatusCode(-1);
       },
       (error) => {
         this.isLoading = false;
-        this.response.setMessage(error.error);
+        this.response.setMessage(typeof error.error === 'string' ? error.error : '');
         this.response.setProducts([]);
         this.response.setStatusCode(error.status);
       }

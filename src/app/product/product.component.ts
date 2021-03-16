@@ -159,7 +159,7 @@ export class ProductComponent implements OnInit {
           }
           else {
             if (data) {
-              this.response.setMessage(data);
+              this.response.setMessage(data === '<?xml version="1.0" encoding="UTF-8" standalone="yes"?><products/>'? 'Empty set' : data);
             }
             else {
               this.response.setMessage('OK');
@@ -171,8 +171,9 @@ export class ProductComponent implements OnInit {
           this.alert.bootstrapType = 'success';
         },
         (error) => {
+          console.log(error);
           this.isLoading = false;
-          this.response.setMessage(error.error);
+          this.response.setMessage(typeof error.error === 'string' ? error.error : '');
           this.response.setProducts([]);
           this.response.setStatusCode(error.status);
           this.alert.isVisible = true;
