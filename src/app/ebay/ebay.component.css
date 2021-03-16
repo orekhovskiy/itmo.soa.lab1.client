@@ -1,0 +1,16 @@
+.input-group, .response {
+    padding: 20px;
+}
+
+.nested {
+    padding-left:20px;
+    padding-right:20px;
+    padding-bottom: 5px;
+    border: 2px solid grey;
+    border-radius: 5px;
+    margin-bottom: 10px;
+}
+
+.badge {
+    margin: 5px;
+}

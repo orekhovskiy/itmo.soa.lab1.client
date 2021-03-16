@@ -1,0 +1,104 @@
+<div class="container">
+    <div class="input-group mb-3">
+        <button class="btn btn-primary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+            {{selectedResource}}
+        </button>
+        <ul class="dropdown-menu">
+          <li *ngFor="let resource of resources"><button class="dropdown-item" (click)="setResource(resource)">{{resource}}</button></li>
+        </ul>
+        <input type="text" [formControl]="value" class="form-control" id="value">
+        <div *ngIf="!isLoading; else loading">
+            <button class="btn btn-dark" (click)="sendRequest()">Send request</button>
+        </div>
+        <ng-template #loading>
+            <button class="btn btn-dark" type="button" disabled>
+                <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                Loading...
+            </button>
+        </ng-template>
+    </div>
+    <div class="response">
+        <h1 *ngIf="response.getStatusCode() != -1">
+            <span class="badge bg-danger">
+                Status: {{response.getStatusCode()}}
+            </span>
+        </h1>
+        <h2 *ngIf="response.getMessage()">
+            {{response.getMessage()}} 
+        </h2>
+        <div *ngIf="response.getProducts().length > 0">
+            <div *ngFor="let product of response.getProducts()" class="nested"> 
+                <h3><span class="badge bg-primary">Product</span></h3>
+                <div *ngIf="product.id" class="row row-cols-lg-auto">
+                    <span class="badge bg-secondary">Id</span>
+                    <span class="badge bg-light text-dark">{{product.id}}</span>
+                </div>
+                <div *ngIf="product.name" class="row row-cols-lg-auto">
+                    <span class="badge bg-secondary">Name</span>
+                    <span class="badge bg-light text-dark">{{product.name}}</span>
+                </div>
+                <div *ngIf="product.coordinates" class="nested">
+                    <h5><span class="badge bg-primary">Coordinates</span></h5>
+                    <div *ngIf="product.coordinates.x" class="row row-cols-lg-auto">
+                        <span class="badge bg-secondary">X</span>
+                        <span class="badge bg-light text-dark">{{product.coordinates.x}}</span>
+                    </div>
+                    <div *ngIf="product.coordinates.y" class="row row-cols-lg-auto">
+                        <span class="badge bg-secondary">Y</span>
+                        <span class="badge bg-light text-dark">{{product.coordinates.y}}</span>
+                    </div>
+                </div>
+                <div *ngIf="product.creationDate" class="row row-cols-lg-auto">
+                    <span class="badge bg-secondary">Creation Date</span>
+                    <span class="badge bg-light text-dark">{{product.creationDate}}</span>
+                </div>
+                <div *ngIf="product.price" class="row row-cols-lg-auto">
+                    <span class="badge bg-secondary">Price</span>
+                    <span class="badge bg-light text-dark">{{product.price}}</span>
+                </div>
+                <div *ngIf="product.partNumber" class="row row-cols-lg-auto">
+                    <span class="badge bg-secondary">Part Number</span>
+                    <span class="badge bg-light text-dark">{{product.partNumber}}</span>
+                </div>
+                <div *ngIf="product.manufactureCost" class="row row-cols-lg-auto">
+                    <span class="badge bg-secondary">Manufacture Cost</span>
+                    <span class="badge bg-light text-dark">{{product.manufactureCost}}</span>
+                </div>
+                <div *ngIf="product.unitOfMeasure" class="row row-cols-lg-auto">
+                    <span class="badge bg-secondary">Unit Of Measure</span>
+                    <span class="badge bg-light text-dark">{{product.unitOfMeasure}}</span>
+                </div>
+                <div *ngIf="product.person" class="nested">
+                    <h5><span class="badge bg-primary">Owner</span></h5>
+                    <div *ngIf="product.person.name" class="row row-cols-lg-auto">
+                        <span class="badge bg-secondary">Name</span>
+                        <span class="badge bg-light text-dark">{{product.person.name}}</span>
+                    </div>
+                    <div *ngIf="product.person.weight" class="row row-cols-lg-auto">
+                        <span class="badge bg-secondary">Weight</span>
+                        <span class="badge bg-light text-dark">{{product.person.weight}}</span>
+                    </div>
+                    <div *ngIf="product.person.country" class="row row-cols-lg-auto">
+                        <span class="badge bg-secondary">Nationality</span>
+                        <span class="badge bg-light text-dark">{{product.person.country}}</span>
+                    </div>
+                    <div *ngIf="product.person.location" class="nested">
+                        <h5><span class="badge bg-primary">Location</span></h5>
+                        <div *ngIf="product.person.location.x" class="row row-cols-lg-auto">
+                            <span class="badge bg-secondary">X</span>
+                            <span class="badge bg-light text-dark">{{product.person.location.x}}</span>
+                        </div>
+                        <div *ngIf="product.person.location.y" class="row row-cols-lg-auto">
+                            <span class="badge bg-secondary">Y</span>
+                            <span class="badge bg-light text-dark">{{product.person.location.y}}</span>
+                        </div>
+                        <div *ngIf="product.person.location.z" class="row row-cols-lg-auto">
+                            <span class="badge bg-secondary">Z</span>
+                            <span class="badge bg-light text-dark">{{product.person.location.z}}</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
